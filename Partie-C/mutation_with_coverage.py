@@ -6,6 +6,7 @@ from fuzzingbook.Fuzzer import Fuzzer, RandomFuzzer
 from fuzzingbook.MutationFuzzer import MutationFuzzer
 from num2words import num2words
 
+# Règle la graine aléatoire
 RANDOM_SEED = 2089776
 random.seed(RANDOM_SEED)
 
@@ -26,7 +27,7 @@ def calculate_cumulative_coverage(input_population, function):
         cumulative_coverage.append(len(all_coverage))
     return cumulative_coverage
 
-
+# Ajout du paramètre label afin de pouvoir les différencier dans le graphique
 def plot(cumulative_coverage, label: str):
     plt.plot(cumulative_coverage, label=label)
     plt.title('Coverage')
@@ -37,23 +38,31 @@ def plot(cumulative_coverage, label: str):
 class MyFuzzer(Fuzzer):
 
     def fuzz(self) -> str:
+        # Renvoie la chaîne de caractères d'un nombre aléatoire compris entre 0 et 1e100
         return str(random.randint(0, 1e100))
 
 
+# Nombre d'itérations
 trials = 500
 
+# Fuzzers testés
 fuzzers = dict(
     random=RandomFuzzer(),
     mutation=MutationFuzzer(seed=["3452020"]),
     my_fuzzer=MyFuzzer(),
 )
 
+# Itération sur les fuzzers
 for name, fuzzer in fuzzers.items():
+    # Génération des entrées
     input_set = []
     for i in range(0, trials):
         input_set.append(fuzzer.fuzz())
+    # Calcul de la couverture
     cumulative_coverage = calculate_cumulative_coverage(input_set, num2words)
+    # Ajout de la courbe dans le graphique
     plot(cumulative_coverage, label=name)
 
+# Affichage du graphique avec les légendes
 plt.legend()
 plt.show()
