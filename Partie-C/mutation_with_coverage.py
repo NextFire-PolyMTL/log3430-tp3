@@ -38,8 +38,9 @@ def plot(cumulative_coverage, label: str):
 class MyFuzzer(Fuzzer):
 
     def fuzz(self) -> str:
-        # Renvoie la chaîne de caractères d'un nombre aléatoire compris entre 0 et 1e100
-        return str(random.randint(0, 1e100))
+        # Renvoie la chaîne de caractères d'un nombre aléatoire
+        # compris entre -1e100 et 1e100
+        return str(random.randint(-1e100, 1e100))
 
 
 # Nombre d'itérations
